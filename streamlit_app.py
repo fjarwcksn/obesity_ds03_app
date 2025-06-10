@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
-from sklearn.preprocessing import StandardScaler
 
 # ==============================
 # 🎨 App UI Configuration
@@ -89,8 +88,10 @@ if submit_button:
 
         # One-hot encoding dan align kolom
         user_input_encoded = pd.get_dummies(user_input)
-        input_data = pd.DataFrame(columns=expected_columns)
-        input_data = pd.concat([input_data, user_input_encoded], ignore_index=True).fillna(0)
+        input_data = pd.DataFrame(0, index=[0], columns=expected_columns)
+        for col in user_input_encoded.columns:
+            if col in input_data.columns:
+                input_data.at[0, col] = user_input_encoded.at[0, col]
 
         # Scaling dan prediksi
         input_scaled = scaler.transform(input_data)
