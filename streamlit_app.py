@@ -82,25 +82,25 @@ if submit_button:
             'MTRANS': [MTRANS]
         })
 
-        # Load model & scaler
+        # Load model, scaler, dan expected columns
         model = pickle.load(open('rf_model.pkl', 'rb'))
         scaler = pickle.load(open('scaler.pkl', 'rb'))
+        expected_columns = pickle.load(open('columns.pkl', 'rb'))
 
-        # One-hot encoding
+        # One-hot encoding dan align kolom
         user_input_encoded = pd.get_dummies(user_input)
-        input_data = pd.DataFrame(columns=model.feature_names_in_)
+        input_data = pd.DataFrame(columns=expected_columns)
         input_data = pd.concat([input_data, user_input_encoded], ignore_index=True).fillna(0)
 
-        # Scaling
+        # Scaling dan prediksi
         input_scaled = scaler.transform(input_data)
         prediction = model.predict(input_scaled)[0]
 
-        # Mapping label (urut sesuai training)
         label_map = ['Insufficient_Weight', 'Normal_Weight', 'Obesity_Type_I', 'Obesity_Type_II',
                      'Obesity_Type_III', 'Overweight_Level_I', 'Overweight_Level_II']
 
         st.success(f"✅ Hasil Prediksi: **{label_map[prediction]}**")
 
     except Exception as e:
-        st.error("Terjadi kesalahan saat memproses prediksi. Pastikan file `rf_model.pkl` dan `scaler.pkl` sudah tersedia di direktori yang sama.")
+        st.error("Terjadi kesalahan saat memproses prediksi. Pastikan file `rf_model.pkl`, `scaler.pkl`, dan `columns.pkl` tersedia.")
         st.exception(e)
