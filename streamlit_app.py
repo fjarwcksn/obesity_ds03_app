@@ -4,34 +4,45 @@ import numpy as np
 import pickle
 
 # ==============================
-# 🎨 App UI Configuration
+# 🎨 App UI Configuration (Kesehatan)
 # ==============================
 st.set_page_config(page_title="Prediksi Obesitas", page_icon="🩺", layout="centered")
 st.markdown("""
 <style>
+    body {
+        background-color: #f0fdf4;
+    }
     .main {
-        background-color: #f4f6f9;
+        background-color: #f0fdf4;
+        padding: 2rem;
     }
     h1, h2, h3 {
-        color: #2c3e50;
+        color: #2e7d32;
     }
     .stButton>button {
-        background-color: #4CAF50;
+        background-color: #2e7d32;
         color: white;
+        border-radius: 5px;
+    }
+    .stSelectbox>div>div {
+        background-color: #e8f5e9;
     }
 </style>
 """, unsafe_allow_html=True)
 
+st.image("https://cdn-icons-png.flaticon.com/512/3050/3050525.png", width=100)
 st.title("🩺 Aplikasi Prediksi Tingkat Obesitas")
-st.write("""
-Aplikasi ini menggunakan model Machine Learning untuk memprediksi tingkat obesitas berdasarkan data kebiasaan harian dan informasi fisik pengguna.
-Silakan isi formulir berikut untuk mendapatkan hasil prediksi.
+st.markdown("""
+Aplikasi ini menggunakan model **Machine Learning** untuk memprediksi tingkat obesitas berdasarkan **data kebiasaan harian dan informasi fisik** pengguna.
+
+💡 Gunakan hasil ini sebagai **indikasi awal** dan tetap konsultasikan dengan profesional kesehatan jika diperlukan.
 """)
 
 # ==============================
 # 📥 Input Form
 # ==============================
 with st.form(key='obesity_form'):
+    st.subheader("📋 Formulir Kesehatan Harian")
     col1, col2 = st.columns(2)
 
     with col1:
@@ -100,7 +111,11 @@ if submit_button:
         label_map = ['Insufficient_Weight', 'Normal_Weight', 'Obesity_Type_I', 'Obesity_Type_II',
                      'Obesity_Type_III', 'Overweight_Level_I', 'Overweight_Level_II']
 
-        st.success(f"✅ Hasil Prediksi: **{label_map[prediction]}**")
+        kategori = label_map[prediction]
+        if kategori == 'Normal_Weight':
+            st.success(f"✅ Hasil Prediksi: **{kategori}**\n\nKondisi berat badan Anda normal. Pertahankan gaya hidup sehat!")
+        else:
+            st.warning(f"⚠️ Hasil Prediksi: **{kategori}**\n\nKondisi berat badan Anda tidak normal. Disarankan untuk menjaga pola makan dan aktivitas sehat.")
 
     except Exception as e:
         st.error("Terjadi kesalahan saat memproses prediksi. Pastikan file `rf_model.pkl`, `scaler.pkl`, dan `columns.pkl` tersedia.")
