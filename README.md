@@ -36,7 +36,7 @@ Users fill in a form with health and lifestyle inputs. The model predicts the ob
 | `rf_model.pkl`     | Trained Random Forest model          |
 | `scaler.pkl`       | StandardScaler for preprocessing     |
 | `requirements.txt` | List of Python dependencies          |
-| `Capstone-project_ds03.ipynb` | Model development & training notebook |
+| `Capstone-DS03.ipynb` | Model development & training notebook |
 
 ---
 
