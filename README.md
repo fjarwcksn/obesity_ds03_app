@@ -1,5 +1,9 @@
 # 🩺 Obesity Risk Prediction App
 
+![Python](https://img.shields.io/badge/Python-3.9-blue)
+![Streamlit](https://img.shields.io/badge/Streamlit-Deployed-brightgreen)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+
 A modern and interactive **Streamlit web application** to predict an individual's **obesity level** based on health and lifestyle inputs such as age, diet, physical activity, water intake, and more.
 
 This project was developed as part of the **Capstone Project – Bengkel Koding Data Science Program**.
