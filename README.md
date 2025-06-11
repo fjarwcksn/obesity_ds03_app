@@ -3,7 +3,7 @@
 A Streamlit web app for predicting obesity level based on user input features such as age, weight, dietary habits, physical activity, and more.
 
 ## 🚀 Live App
-[Click here to open the app](https://your-deployment-link.streamlit.app) *(Replace this with your actual Streamlit Cloud link)*
+[Click here to open the app](https://obesityds03.streamlit.app/) *(Replace this with your actual Streamlit Cloud link)*
 
 ---
 
