@@ -4,121 +4,121 @@ import numpy as np
 import pickle
 
 # ==============================
-# 🌐 International Medical Theme
+# 🎨 Konfigurasi Tampilan UI
 # ==============================
-st.set_page_config(page_title="Obesity Risk Predictor", page_icon="🩺", layout="wide")
+st.set_page_config(page_title="Prediksi Risiko Obesitas", page_icon="🩺", layout="wide")
 st.markdown("""
 <style>
     body {
-        background: linear-gradient(135deg, #f0f4f8 0%, #e0f7fa 100%);
+        background: linear-gradient(120deg, #e0f7fa, #f0f4f8);
         font-family: 'Segoe UI', sans-serif;
     }
     .main {
-        padding: 2rem;
         background-color: #ffffff;
+        padding: 2rem;
         border-radius: 10px;
         box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05);
     }
     h1, h2, h3 {
-        color: #00796b;
+        color: #009688;
     }
     .stButton>button {
-        background-color: #00796b;
+        background-color: #009688;
         color: white;
-        border-radius: 10px;
-        padding: 0.5rem 1rem;
+        border-radius: 8px;
         font-weight: bold;
+        padding: 0.5rem 1rem;
     }
 </style>
 """, unsafe_allow_html=True)
 
-st.image("https://cdn-icons-png.flaticon.com/512/5997/5997770.png", width=90)
-st.title("🩺 Obesity Risk Prediction App")
+st.image("https://cdn-icons-png.flaticon.com/512/4320/4320337.png", width=80)
+st.title("🩺 Aplikasi Prediksi Risiko Obesitas")
 st.markdown("""
-This application uses a **machine learning model** to predict the level of obesity based on your lifestyle and health metrics. 
+Selamat datang di aplikasi prediksi obesitas! 🧠 
+Gunakan aplikasi ini untuk mengetahui estimasi tingkat obesitas berdasarkan kebiasaan harian dan data fisik kamu.
 
-🔍 Just fill in the form and get an instant result. This tool is for **educational and early awareness purposes only**.
+⚠️ Hasil ini bersifat indikatif dan tidak menggantikan diagnosis dokter.
 """)
 
 # ==============================
-# 📥 Input Form
+# 📥 Formulir Input Pengguna
 # ==============================
-st.markdown("### 📋 Daily Health Assessment Form")
+st.markdown("### 📋 Formulir Pemeriksaan Kesehatan Harian")
 with st.form(key='obesity_form'):
     col1, col2 = st.columns(2)
 
     with col1:
-        age = st.slider('Age', 10, 100, 25)
-        gender = st.selectbox('Gender', ['Male', 'Female'])
-        height = st.number_input('Height (m)', 1.0, 2.5, step=0.01, value=1.70)
-        weight = st.number_input('Weight (kg)', 30.0, 200.0, step=0.1, value=70.0)
-        family_history = st.selectbox('Family history of obesity?', ['yes', 'no'])
-        FAVC = st.selectbox('High-calorie food frequently consumed?', ['yes', 'no'])
-        FCVC = st.slider('Frequency of vegetable consumption (1-3)', 1.0, 3.0, 2.0)
+        age = st.slider('Usia', 10, 100, 25)
+        gender = st.selectbox('Jenis Kelamin', ['Laki-laki', 'Perempuan'])
+        height = st.number_input('Tinggi Badan (meter)', 1.0, 2.5, step=0.01, value=1.70)
+        weight = st.number_input('Berat Badan (kg)', 30.0, 200.0, step=0.1, value=70.0)
+        family_history = st.selectbox('Ada riwayat obesitas di keluarga?', ['ya', 'tidak'])
+        FAVC = st.selectbox('Sering makan makanan tinggi kalori?', ['ya', 'tidak'])
+        FCVC = st.slider('Frekuensi makan sayur (1=jarang, 3=sering)', 1.0, 3.0, 2.0)
 
     with col2:
-        NCP = st.slider('Number of main meals per day', 1.0, 4.0, 3.0)
-        CAEC = st.selectbox('Snacking habits?', ['no', 'Sometimes', 'Frequently', 'Always'])
-        SMOKE = st.selectbox('Do you smoke?', ['yes', 'no'])
-        CH2O = st.slider('Daily water intake (liters)', 1.0, 3.0, 2.0)
-        SCC = st.selectbox('Have you monitored your calories?', ['yes', 'no'])
-        FAF = st.slider('Physical activity per week (hrs)', 0.0, 5.0, 2.0)
-        TUE = st.slider('Daily screen time (hrs)', 0.0, 5.0, 2.0)
-        CALC = st.selectbox('Alcohol consumption?', ['no', 'Sometimes', 'Frequently', 'Always'])
-        MTRANS = st.selectbox('Primary mode of transport', ['Public_Transportation', 'Walking', 'Automobile', 'Motorbike', 'Bike'])
+        NCP = st.slider('Jumlah makan utama per hari', 1.0, 4.0, 3.0)
+        CAEC = st.selectbox('Kebiasaan ngemil?', ['tidak', 'Kadang-kadang', 'Sering', 'Selalu'])
+        SMOKE = st.selectbox('Apakah kamu merokok?', ['ya', 'tidak'])
+        CH2O = st.slider('Konsumsi air harian (liter)', 1.0, 3.0, 2.0)
+        SCC = st.selectbox('Apakah pernah mengurangi makanan?', ['ya', 'tidak'])
+        FAF = st.slider('Aktivitas fisik mingguan (jam)', 0.0, 5.0, 2.0)
+        TUE = st.slider('Waktu layar per hari (jam)', 0.0, 5.0, 2.0)
+        CALC = st.selectbox('Konsumsi alkohol?', ['tidak', 'Kadang-kadang', 'Sering', 'Selalu'])
+        MTRANS = st.selectbox('Transportasi utama', ['Transportasi Umum', 'Jalan Kaki', 'Mobil', 'Motor', 'Sepeda'])
 
-    submit_button = st.form_submit_button(label='Predict Now')
+    submit_button = st.form_submit_button(label='🔍 Prediksi Sekarang')
 
 # ==============================
-# 🔮 Load Model & Predict
+# 🔮 Prediksi dengan Model
 # ==============================
 if submit_button:
     try:
-        # DataFrame Input
+        # DataFrame dari input
         user_input = pd.DataFrame({
             'Age': [age],
-            'Gender': [gender],
+            'Gender': ["Male" if gender == "Laki-laki" else "Female"],
             'Height': [height],
             'Weight': [weight],
-            'family_history_with_overweight': [family_history],
-            'FAVC': [FAVC],
+            'family_history_with_overweight': ["yes" if family_history == "ya" else "no"],
+            'FAVC': ["yes" if FAVC == "ya" else "no"],
             'FCVC': [FCVC],
             'NCP': [NCP],
             'CAEC': [CAEC],
-            'SMOKE': [SMOKE],
+            'SMOKE': ["yes" if SMOKE == "ya" else "no"],
             'CH2O': [CH2O],
-            'SCC': [SCC],
+            'SCC': ["yes" if SCC == "ya" else "no"],
             'FAF': [FAF],
             'TUE': [TUE],
             'CALC': [CALC],
-            'MTRANS': [MTRANS]
+            'MTRANS': [MTRANS.replace(" ", "_").replace("Transportasi_Umum", "Public_Transportation")]
         })
 
-        # Load model, scaler, dan expected columns
+        # Load model dan scaler
         model = pickle.load(open('rf_model.pkl', 'rb'))
         scaler = pickle.load(open('scaler.pkl', 'rb'))
         expected_columns = pickle.load(open('columns.pkl', 'rb'))
 
-        # One-hot encoding dan align kolom
+        # Encoding dan penyesuaian kolom
         user_input_encoded = pd.get_dummies(user_input)
         input_data = pd.DataFrame(0, index=[0], columns=expected_columns)
         for col in user_input_encoded.columns:
             if col in input_data.columns:
                 input_data.at[0, col] = user_input_encoded.at[0, col]
 
-        # Scaling dan prediksi
         input_scaled = scaler.transform(input_data)
         prediction = model.predict(input_scaled)[0]
 
-        label_map = ['Insufficient_Weight', 'Normal_Weight', 'Obesity_Type_I', 'Obesity_Type_II',
-                     'Obesity_Type_III', 'Overweight_Level_I', 'Overweight_Level_II']
+        label_map = ['Berat Badan Kurang', 'Normal', 'Obesitas Tipe I', 'Obesitas Tipe II',
+                     'Obesitas Tipe III', 'Kelebihan Berat Badan I', 'Kelebihan Berat Badan II']
 
-        kategori = label_map[prediction]
-        if kategori == 'Normal_Weight':
-            st.success(f"✅ Prediction: **{kategori}**\n\nYour body weight is in the healthy range. Keep up the good lifestyle!")
+        hasil = label_map[prediction]
+        if hasil == 'Normal':
+            st.success(f"✅ Hasil Prediksi: **{hasil}**\n\nBerat badan Anda termasuk normal. Pertahankan pola hidup sehat dan aktif!")
         else:
-            st.warning(f"⚠️ Prediction: **{kategori}**\n\nThis indicates a non-ideal body weight. Please consult your physician or adopt healthier habits.")
+            st.warning(f"⚠️ Hasil Prediksi: **{hasil}**\n\nBerat badan Anda tidak dalam kategori normal. Disarankan untuk menjaga pola makan dan aktivitas.")
 
     except Exception as e:
-        st.error("An error occurred while processing your prediction. Please ensure all model files are available.")
+        st.error("Terjadi kesalahan saat memproses prediksi. Pastikan file `rf_model.pkl`, `scaler.pkl`, dan `columns.pkl` tersedia.")
         st.exception(e)
