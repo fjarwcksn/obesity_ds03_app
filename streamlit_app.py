@@ -4,68 +4,70 @@ import numpy as np
 import pickle
 
 # ==============================
-# 🎨 App UI Configuration (Kesehatan)
+# 🌐 International Medical Theme
 # ==============================
-st.set_page_config(page_title="Prediksi Obesitas", page_icon="🩺", layout="centered")
+st.set_page_config(page_title="Obesity Risk Predictor", page_icon="🩺", layout="wide")
 st.markdown("""
 <style>
     body {
-        background-color: #f0fdf4;
+        background: linear-gradient(135deg, #f0f4f8 0%, #e0f7fa 100%);
+        font-family: 'Segoe UI', sans-serif;
     }
     .main {
-        background-color: #f0fdf4;
         padding: 2rem;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05);
     }
     h1, h2, h3 {
-        color: #2e7d32;
+        color: #00796b;
     }
     .stButton>button {
-        background-color: #2e7d32;
+        background-color: #00796b;
         color: white;
-        border-radius: 5px;
-    }
-    .stSelectbox>div>div {
-        background-color: #e8f5e9;
+        border-radius: 10px;
+        padding: 0.5rem 1rem;
+        font-weight: bold;
     }
 </style>
 """, unsafe_allow_html=True)
 
-st.image("https://cdn-icons-png.flaticon.com/512/3050/3050525.png", width=100)
-st.title("🩺 Aplikasi Prediksi Tingkat Obesitas")
+st.image("https://cdn-icons-png.flaticon.com/512/5997/5997770.png", width=90)
+st.title("🩺 Obesity Risk Prediction App")
 st.markdown("""
-Aplikasi ini menggunakan model **Machine Learning** untuk memprediksi tingkat obesitas berdasarkan **data kebiasaan harian dan informasi fisik** pengguna.
+This application uses a **machine learning model** to predict the level of obesity based on your lifestyle and health metrics. 
 
-💡 Gunakan hasil ini sebagai **indikasi awal** dan tetap konsultasikan dengan profesional kesehatan jika diperlukan.
+🔍 Just fill in the form and get an instant result. This tool is for **educational and early awareness purposes only**.
 """)
 
 # ==============================
 # 📥 Input Form
 # ==============================
+st.markdown("### 📋 Daily Health Assessment Form")
 with st.form(key='obesity_form'):
-    st.subheader("📋 Formulir Kesehatan Harian")
     col1, col2 = st.columns(2)
 
     with col1:
-        age = st.slider('Usia', 10, 100, 25)
-        gender = st.selectbox('Jenis Kelamin', ['Male', 'Female'])
-        height = st.number_input('Tinggi Badan (m)', 1.0, 2.5, step=0.01, value=1.70)
-        weight = st.number_input('Berat Badan (kg)', 30.0, 200.0, step=0.1, value=70.0)
-        family_history = st.selectbox('Riwayat Keluarga Obesitas', ['yes', 'no'])
-        FAVC = st.selectbox('Konsumsi Makanan Tinggi Kalori?', ['yes', 'no'])
-        FCVC = st.slider('Frekuensi Konsumsi Sayur (1-3)', 1.0, 3.0, 2.0)
+        age = st.slider('Age', 10, 100, 25)
+        gender = st.selectbox('Gender', ['Male', 'Female'])
+        height = st.number_input('Height (m)', 1.0, 2.5, step=0.01, value=1.70)
+        weight = st.number_input('Weight (kg)', 30.0, 200.0, step=0.1, value=70.0)
+        family_history = st.selectbox('Family history of obesity?', ['yes', 'no'])
+        FAVC = st.selectbox('High-calorie food frequently consumed?', ['yes', 'no'])
+        FCVC = st.slider('Frequency of vegetable consumption (1-3)', 1.0, 3.0, 2.0)
 
     with col2:
-        NCP = st.slider('Jumlah Makan per Hari', 1.0, 4.0, 3.0)
-        CAEC = st.selectbox('Cemilan di Luar Jam Makan?', ['no', 'Sometimes', 'Frequently', 'Always'])
-        SMOKE = st.selectbox('Apakah Merokok?', ['yes', 'no'])
-        CH2O = st.slider('Konsumsi Air Harian (liter)', 1.0, 3.0, 2.0)
-        SCC = st.selectbox('Pernah Mengurangi Makan?', ['yes', 'no'])
-        FAF = st.slider('Aktivitas Fisik Mingguan (jam)', 0.0, 5.0, 2.0)
-        TUE = st.slider('Waktu Layar Harian (jam)', 0.0, 5.0, 2.0)
-        CALC = st.selectbox('Konsumsi Alkohol?', ['no', 'Sometimes', 'Frequently', 'Always'])
-        MTRANS = st.selectbox('Alat Transportasi Utama', ['Public_Transportation', 'Walking', 'Automobile', 'Motorbike', 'Bike'])
+        NCP = st.slider('Number of main meals per day', 1.0, 4.0, 3.0)
+        CAEC = st.selectbox('Snacking habits?', ['no', 'Sometimes', 'Frequently', 'Always'])
+        SMOKE = st.selectbox('Do you smoke?', ['yes', 'no'])
+        CH2O = st.slider('Daily water intake (liters)', 1.0, 3.0, 2.0)
+        SCC = st.selectbox('Have you monitored your calories?', ['yes', 'no'])
+        FAF = st.slider('Physical activity per week (hrs)', 0.0, 5.0, 2.0)
+        TUE = st.slider('Daily screen time (hrs)', 0.0, 5.0, 2.0)
+        CALC = st.selectbox('Alcohol consumption?', ['no', 'Sometimes', 'Frequently', 'Always'])
+        MTRANS = st.selectbox('Primary mode of transport', ['Public_Transportation', 'Walking', 'Automobile', 'Motorbike', 'Bike'])
 
-    submit_button = st.form_submit_button(label='🔍 Prediksi Sekarang')
+    submit_button = st.form_submit_button(label='Predict Now')
 
 # ==============================
 # 🔮 Load Model & Predict
@@ -113,10 +115,10 @@ if submit_button:
 
         kategori = label_map[prediction]
         if kategori == 'Normal_Weight':
-            st.success(f"✅ Hasil Prediksi: **{kategori}**\n\nKondisi berat badan Anda normal. Pertahankan gaya hidup sehat!")
+            st.success(f"✅ Prediction: **{kategori}**\n\nYour body weight is in the healthy range. Keep up the good lifestyle!")
         else:
-            st.warning(f"⚠️ Hasil Prediksi: **{kategori}**\n\nKondisi berat badan Anda tidak normal. Disarankan untuk menjaga pola makan dan aktivitas sehat.")
+            st.warning(f"⚠️ Prediction: **{kategori}**\n\nThis indicates a non-ideal body weight. Please consult your physician or adopt healthier habits.")
 
     except Exception as e:
-        st.error("Terjadi kesalahan saat memproses prediksi. Pastikan file `rf_model.pkl`, `scaler.pkl`, dan `columns.pkl` tersedia.")
+        st.error("An error occurred while processing your prediction. Please ensure all model files are available.")
         st.exception(e)
